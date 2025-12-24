@@ -63,10 +63,8 @@ namespace YOBA {
 			
 			float readFloat(uint8_t bits = 32) {
 				auto u32 = readUint32(bits);
-				auto u8Ptr = reinterpret_cast<uint8_t*>(&u32);
-				auto fPtr = reinterpret_cast<float*>(u8Ptr);
 				
-				return *fPtr;
+				return *reinterpret_cast<float*>(reinterpret_cast<uint8_t*>(&u32));
 			}
 			
 			void writeUint8(uint8_t value, uint8_t bits = 8) {
@@ -82,10 +80,7 @@ namespace YOBA {
 			}
 			
 			void writeFloat(float value, uint8_t bits = 32) {
-				auto u8Ptr = reinterpret_cast<uint8_t*>(&value);
-				auto u32Ptr = reinterpret_cast<uint32_t*>(u8Ptr);
-				
-				writeUint32(*u32Ptr, bits);
+				writeUint32(*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(&value)), bits);
 			}
 
 		private:
