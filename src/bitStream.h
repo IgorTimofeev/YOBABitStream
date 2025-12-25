@@ -13,10 +13,10 @@ namespace YOBA {
 				setBitIndex(bitIndex);
 			}
 
-			uint8_t* getBuffer() const {
+			inline uint8_t* getBuffer() const {
 				return _buffer;
 			}
-
+			
 			inline size_t getBitIndex() const {
 				return _bitIndex;
 			}
@@ -81,6 +81,12 @@ namespace YOBA {
 			void writeFloat(float value, uint8_t bits = 32) {
 				writeUint32(std::bit_cast<uint32_t>(value), bits);
 			}
+			
+			void nextByte() {
+				_bitIndex += 8 - _byteBitIndex;
+				_byteIndex++;
+				_byteBitIndex = 0;
+			}
 
 		private:
 			uint8_t* _buffer;
@@ -133,12 +139,7 @@ namespace YOBA {
 				return sign ? -magnitude : magnitude;
 			}
 			
-			void NextByteAndExpand() {
-				_byteIndex++;
-				_byteBitIndex = 0;
-			}
-			
-			void WriteBit(bool value) {
+			void writeBit(bool value) {
 				_buffer[_byteIndex] =
 					value
 					? static_cast<uint8_t>(_buffer[_byteIndex] | (1 << _byteBitIndex))
@@ -148,14 +149,15 @@ namespace YOBA {
 				_byteBitIndex++;
 				
 				if (_byteBitIndex >= 8) {
-					NextByteAndExpand();
+					_byteIndex++;
+					_byteBitIndex = 0;
 				}
 			}
 			
 			template<typename TNumber>
 			void writeUnsigned(TNumber value, uint8_t bits) {
-				for (int i = 0; i < bits; ++i) {
-					WriteBit(((value >> i) & 0b1) == 1);
+				for (uint8_t i = 0; i < bits; ++i) {
+					writeBit(((value >> i) & 0b1) == 1);
 				}
 			}
 	};
