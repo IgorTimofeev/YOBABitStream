@@ -46,6 +46,10 @@ namespace YOBA {
 				return readUnsigned<uint8_t>(bits);
 			}
 			
+			int16_t readInt8(uint8_t bits = 8) {
+				return readSigned<int8_t, uint8_t>(bits);
+			}
+			
 			uint16_t readUint16(uint8_t bits = 16) {
 				return readUnsigned<uint16_t>(bits);
 			}
@@ -68,6 +72,10 @@ namespace YOBA {
 			
 			void writeUint8(uint8_t value, uint8_t bits = 8) {
 				writeUnsigned<uint8_t>(value, bits);
+			}
+			
+			void writeInt8(int8_t value, uint8_t bits = 8) {
+				writeSigned<int8_t, uint8_t>(value, bits);
 			}
 			
 			void writeUint16(uint16_t value, uint8_t bits = 16) {
