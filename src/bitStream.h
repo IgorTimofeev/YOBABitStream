@@ -70,6 +70,10 @@ namespace YOBA {
 				return std::bit_cast<float>(readUint32(bits));
 			}
 			
+			void writeBool(bool value) {
+				writeBit(value);
+			}
+			
 			void writeUint8(uint8_t value, uint8_t bits = 8) {
 				writeUnsigned<uint8_t>(value, bits);
 			}
@@ -168,13 +172,7 @@ namespace YOBA {
 					? static_cast<uint8_t>(_buffer[_byteIndex] | (1 << _byteBitIndex))
 					: static_cast<uint8_t>(_buffer[_byteIndex] & ~(1 << _byteBitIndex));
 				
-				_bitIndex++;
-				_byteBitIndex++;
-				
-				if (_byteBitIndex >= 8) {
-					_byteIndex++;
-					_byteBitIndex = 0;
-				}
+				nextBit();
 			}
 			
 			template<std::unsigned_integral TNumber>
